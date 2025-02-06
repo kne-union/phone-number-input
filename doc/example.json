@@ -1,0 +1,62 @@
+{
+  "isFull": false,
+  "list": [
+    {
+      "title": "这里填写示例标题",
+      "description": "这里填写示例说明",
+      "code": "./base.js",
+      "scope": [
+        {
+          "name": "remoteLoader",
+          "packageName": "@kne/remote-loader"
+        },
+        {
+          "name": "_PhoneNumberInput",
+          "packageName": "@kne/current-lib_phone-number-input",
+          "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "这里填写示例标题",
+      "description": "这里填写示例说明",
+      "code": "./country-select.js",
+      "scope": [
+        {
+          "name": "remoteLoader",
+          "packageName": "@kne/remote-loader"
+        },
+        {
+          "name": "_PhoneNumberInput",
+          "packageName": "@kne/current-lib_phone-number-input",
+          "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "这里填写示例标题",
+      "description": "这里填写示例说明",
+      "code": "./field.js",
+      "scope": [
+        {
+          "name": "remoteLoader",
+          "packageName": "@kne/remote-loader"
+        },
+        {
+          "name": "_PhoneNumberInput",
+          "packageName": "@kne/current-lib_phone-number-input",
+          "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
+        }
+      ]
+    }
+  ]
+}
