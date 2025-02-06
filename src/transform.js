@@ -5,9 +5,9 @@ const transform = (countries, defaultCountryCode = 86) => {
       return {};
     }
 
-    const matcher = value.match(/^\+(\d+)\s(.*)/);
+    const matcher = value.match(/^\+(\d+)\s?(.*)/);
     if (!(matcher && matcher.length >= 3)) {
-      return { code: countyCodeMap.get(defaultCountryCode), value };
+      return { code: defaultCountryCode, value };
     }
     return { code: Number(matcher[1]), ab: countyCodeMap.get(Number(matcher[1])), value: matcher[2] };
   };
