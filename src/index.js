@@ -8,7 +8,7 @@ import useControlValue from '@kne/use-control-value';
 import Icon from '@kne/react-icon';
 import { useContext } from '@kne/global-context';
 import get from 'lodash/get';
-import { createWithIntlProvider, useIntl } from '@kne/react-intl';
+import { createWithIntlProvider, useIntl, createIntl, FormattedMessage } from '@kne/react-intl';
 import zhCn from './locale/zh-CN';
 import transform from './transform';
 import style from './style.module.scss';
@@ -26,10 +26,11 @@ export const parsePhoneNumber = phoneNumber => {
 
 export const PHONE_NUMBER_INPUT = async (value, { field }) => {
   const countries = await import('./country_flag/countries.json').then(module => module.default);
+  const intl = createIntl({ namespace: 'phone-number-input' });
   const { input, countyCodeMap } = transform(countries);
   value = typeof value === 'string' ? input(value) : value;
   if ((field.rule || '').split(' ').indexOf('REQ') > -1 && !get(value, 'value')) {
-    return { result: false, errMsg: '%s不能为空' };
+    return { result: false, errMsg: label => <FormattedMessage id="notAllowedEmpty" values={{ label }} /> };
   }
   if (!get(value, 'value')) {
     return { result: true };
@@ -40,7 +41,10 @@ export const PHONE_NUMBER_INPUT = async (value, { field }) => {
       extract: true
     });
   });
-  return { result, errMsg: '%s格式不正确' };
+  return {
+    result,
+    errMsg: label => <FormattedMessage id="incorrectFormat" values={{ label }} />
+  };
 };
 
 export const withFetchCountries = WrappedComponent =>
