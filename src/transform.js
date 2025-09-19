@@ -13,11 +13,11 @@ const transform = (countries, defaultCountryCode = 86) => {
   };
 
   const output = value => {
-    if (!value?.code) {
-      return `+${defaultCountryCode}`;
+    if (!value.value) {
+      return '';
     }
 
-    return `+${value.code} ${(value.value || '').replace(/\s+/g, '')}`;
+    return `+${value.code || defaultCountryCode} ${(value.value || '').replace(/\s+/g, '')}`;
   };
 
   return { input, output, countyCodeMap };

@@ -2,8 +2,8 @@
   "isFull": false,
   "list": [
     {
-      "title": "这里填写示例标题",
-      "description": "这里填写示例说明",
+      "title": "基本用法",
+      "description": "展示手机号输入框的基本用法，支持普通格式和字符串格式输入。",
       "code": "./base.js",
       "scope": [
         {
@@ -21,8 +21,8 @@
       ]
     },
     {
-      "title": "这里填写示例标题",
-      "description": "这里填写示例说明",
+      "title": "国家选择",
+      "description": "展示国家选择组件的用法，支持选择国家并输出结果。",
       "code": "./country-select.js",
       "scope": [
         {
@@ -40,8 +40,8 @@
       ]
     },
     {
-      "title": "这里填写示例标题",
-      "description": "这里填写示例说明",
+      "title": "表单字段",
+      "description": "展示手机号输入框的表单字段用法，支持不同格式和受控状态。",
       "code": "./field.js",
       "scope": [
         {
