@@ -1,4 +1,4 @@
-import React, { useMemo, forwardRef } from 'react';
+import React, { useMemo, forwardRef, useRef } from 'react';
 import Fetch from '@kne/react-fetch';
 import { Select, Input, Flex } from 'antd';
 import parsePhoneNumberLib, { AsYouType } from 'libphonenumber-js';
@@ -141,6 +141,7 @@ const PhoneNumberInputField = createWithIntlProvider(
     const [baseValue, onChangeBase] = useControlValue(props);
     const ref = useSimulationBlur(onBlur || (() => {}));
     const { formatMessage } = useIntl();
+    const currentCountryRef = useRef(null);
     const [value, onChange] = useMemo(() => {
       const { input, output, countyCodeMap } = transform(countries, defaultCountryCode);
       if (format === 'string') {
@@ -158,8 +159,9 @@ const PhoneNumberInputField = createWithIntlProvider(
             <CountrySelect
               disabled={others.disabled}
               readOnly={others.readOnly}
-              value={get(value, 'code') || defaultCountryCode}
+              value={get(value, 'code') || currentCountryRef.current || defaultCountryCode}
               onChange={code => {
+                currentCountryRef.current = code;
                 onChange &&
                   onChange(
                     Object.assign(
@@ -181,7 +183,7 @@ const PhoneNumberInputField = createWithIntlProvider(
               onChange(
                 Object.assign({}, value, {
                   value: e.target.value,
-                  code: get(value, 'code') || defaultCountryCode
+                  code: get(value, 'code') || currentCountryRef.current
                 })
               );
           }}
