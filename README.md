@@ -28,18 +28,21 @@ npm i --save @kne/phone-number-input
 #### 示例代码
 
 - 基本用法
-- 展示手机号输入框的基本用法，支持普通格式和字符串格式输入。
-- remoteLoader(@kne/remote-loader),_PhoneNumberInput(@kne/current-lib_phone-number-input)[import * as _PhoneNumberInput from "@kne/phone-number-input"],(@kne/current-lib_phone-number-input/dist/index.css)
+- 展示手机号输入框的基本用法，支持普通格式和字符串格式输入，以及大中小三种大小切换。
+- remoteLoader(@kne/remote-loader),_PhoneNumberInput(@kne/current-lib_phone-number-input)[import * as _PhoneNumberInput from "@kne/phone-number-input"],antd(antd),(@kne/current-lib_phone-number-input/dist/index.css)
 
 ```jsx
 const {createWithRemoteLoader} = remoteLoader;
 const {default: PhoneNumberInput, PHONE_NUMBER_INPUT} = _PhoneNumberInput;
+const {Radio, Flex} = antd;
 
 const BaseExample = createWithRemoteLoader({
     modules: ['components-core:Global@PureGlobal', 'components-core:FormInfo']
 })(({remoteModules}) => {
     const [PureGlobal, FormInfo] = remoteModules;
     const {Form} = FormInfo;
+    const [size, setSize] = React.useState('middle');
+
     return <PureGlobal preset={{
         formInfo: () => {
             return {
@@ -47,7 +50,15 @@ const BaseExample = createWithRemoteLoader({
             };
         }
     }}>
-        <Form data={{
+        <Flex gap={16} vertical style={{marginBottom: 16}}>
+            <div>组件大小：</div>
+            <Radio.Group value={size} onChange={(e) => setSize(e.target.value)} optionType="button" buttonStyle="solid">
+                <Radio.Button value="small">小号</Radio.Button>
+                <Radio.Button value="middle">中号</Radio.Button>
+                <Radio.Button value="large">大号</Radio.Button>
+            </Radio.Group>
+        </Flex>
+        <Form size={size} data={{
             'phone-string':'+86 18728277282'
         }}>
             <FormInfo column={1} list={[

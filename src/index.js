@@ -139,7 +139,7 @@ const PhoneNumberInputField = createWithIntlProvider(
 )(
   withFetchCountries(props => {
     //format: normal string
-    const { onBlur, name, format, countries, defaultCountryCode = 86, showFlag, ...others } = props;
+    const { onBlur, name, format, countries, defaultCountryCode = 86, showFlag, size, ...others } = props;
 
     const [baseValue, onChangeBase] = useControlValue(props);
     const ref = useSimulationBlur(onBlur || (() => {}));
@@ -155,8 +155,9 @@ const PhoneNumberInputField = createWithIntlProvider(
 
     return (
       <div ref={ref}>
-        <Space.Compact>
+        <Space.Compact className={style['phone-number-input']}>
           <CountrySelect
+            size={size}
             disabled={others.disabled}
             readOnly={others.readOnly}
             value={get(value, 'code') || currentCountryRef.current || defaultCountryCode}
@@ -178,6 +179,7 @@ const PhoneNumberInputField = createWithIntlProvider(
           />
           <Input
             {...others}
+            size={size}
             placeholder={others.placeholder || formatMessage({ id: 'placeholderInput' }, { label: '' })}
             value={get(value, 'value', '')}
             onChange={e => {
