@@ -3,7 +3,7 @@
   "list": [
     {
       "title": "基本用法",
-      "description": "展示手机号输入框的基本用法，支持普通格式和字符串格式输入。",
+      "description": "展示手机号输入框的基本用法，支持普通格式和字符串格式输入，以及大中小三种大小切换。",
       "code": "./base.js",
       "scope": [
         {
@@ -14,6 +14,10 @@
           "name": "_PhoneNumberInput",
           "packageName": "@kne/current-lib_phone-number-input",
           "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
         },
         {
           "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
