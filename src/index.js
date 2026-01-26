@@ -1,12 +1,12 @@
 import React, { useMemo, forwardRef, useRef } from 'react';
 import Fetch from '@kne/react-fetch';
-import { Select, Input, Flex } from 'antd';
+import { Select, Input, Flex, Space } from 'antd';
 import parsePhoneNumberLib, { AsYouType } from 'libphonenumber-js';
 import { hooks } from '@kne/react-form-antd';
 import useSimulationBlur from '@kne/use-simulation-blur';
 import useControlValue from '@kne/use-control-value';
 import Icon from '@kne/react-icon';
-import { useContext } from '@kne/global-context';
+import { useGlobalValue } from '@kne/global-context';
 import get from 'lodash/get';
 import { createWithIntlProvider, useIntl, createIntl, FormattedMessage } from '@kne/react-intl';
 import zhCn from './locale/zh-CN';
@@ -70,9 +70,9 @@ export const CountrySelect = createWithIntlProvider(
   'phone-number-input'
 )(
   withFetchCountries(({ countries, showFlag, ...props }) => {
-    const context = useContext();
+    const contextLocale = useGlobalValue('locale');
     const { formatMessage } = useIntl();
-    const locale = context?.locale || 'zh-CN';
+    const locale = contextLocale || 'zh-CN';
     return (
       <Select
         placeholder={formatMessage({ id: 'placeholderCountry' })}
@@ -80,10 +80,13 @@ export const CountrySelect = createWithIntlProvider(
         {...props}
         className={style['country-select']}
         optionLabelProp="formatLabel"
-        showSearch
-        filterOption={(input, option) => {
-          input = String(input).toLowerCase();
-          return String(option.code).indexOf(input) > -1 || option.cnName.toLowerCase().indexOf(input) > -1 || option.enName.toLowerCase().indexOf(input) > -1 || option.ab.toLowerCase().indexOf(input) > -1;
+        showSearch={{
+          filterOption: (input, option) => {
+            const searchText = String(input).toLowerCase();
+            return (
+              String(option?.code)?.includes(searchText) || String(option?.cnName)?.toLowerCase().includes(searchText) || String(option?.enName)?.toLowerCase().includes(searchText) || String(option?.ab)?.toLowerCase().includes(searchText)
+            );
+          }
         }}
         options={countries.map(({ country_name_cn, country_name_en, country_code, ab }) => {
           const name = locale === 'zh-CN' ? country_name_cn : country_name_en;
@@ -136,7 +139,7 @@ const PhoneNumberInputField = createWithIntlProvider(
 )(
   withFetchCountries(props => {
     //format: normal string
-    const { className, onBlur, name, format, countries, defaultCountryCode = 86, showFlag, ...others } = props;
+    const { onBlur, name, format, countries, defaultCountryCode = 86, showFlag, ...others } = props;
 
     const [baseValue, onChangeBase] = useControlValue(props);
     const ref = useSimulationBlur(onBlur || (() => {}));
@@ -151,44 +154,44 @@ const PhoneNumberInputField = createWithIntlProvider(
     }, [baseValue, format, countries, onChangeBase, defaultCountryCode]);
 
     return (
-      <div className={className} ref={ref}>
-        <Input
-          {...others}
-          placeholder={others.placeholder || formatMessage({ id: 'placeholderInput' }, { label: '' })}
-          addonBefore={
-            <CountrySelect
-              disabled={others.disabled}
-              readOnly={others.readOnly}
-              value={get(value, 'code') || currentCountryRef.current || defaultCountryCode}
-              onChange={code => {
-                currentCountryRef.current = code;
-                onChange &&
-                  onChange(
-                    Object.assign(
-                      {},
-                      value,
-                      parsePhone({
-                        code,
-                        value: get(value, 'value', '')
-                      })
-                    )
-                  );
-                onBlur && onBlur();
-              }}
-            />
-          }
-          value={get(value, 'value', '')}
-          onChange={e => {
-            onChange &&
-              onChange(
-                Object.assign({}, value, {
-                  value: e.target.value,
-                  code: get(value, 'code') || currentCountryRef.current
-                })
-              );
-          }}
-          onBlur={onBlur}
-        />
+      <div ref={ref}>
+        <Space.Compact>
+          <CountrySelect
+            disabled={others.disabled}
+            readOnly={others.readOnly}
+            value={get(value, 'code') || currentCountryRef.current || defaultCountryCode}
+            onChange={code => {
+              currentCountryRef.current = code;
+              onChange &&
+                onChange(
+                  Object.assign(
+                    {},
+                    value,
+                    parsePhone({
+                      code,
+                      value: get(value, 'value', '')
+                    })
+                  )
+                );
+              onBlur && onBlur();
+            }}
+          />
+          <Input
+            {...others}
+            placeholder={others.placeholder || formatMessage({ id: 'placeholderInput' }, { label: '' })}
+            value={get(value, 'value', '')}
+            onChange={e => {
+              onChange &&
+                onChange(
+                  Object.assign({}, value, {
+                    value: e.target.value,
+                    code: get(value, 'code') || currentCountryRef.current
+                  })
+                );
+            }}
+            onBlur={onBlur}
+          />
+        </Space.Compact>
       </div>
     );
   })

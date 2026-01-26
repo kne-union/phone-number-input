@@ -57,6 +57,25 @@
           "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
         }
       ]
+    },
+    {
+      "title": "国际化",
+      "description": "展示手机号输入框的国际化功能，支持中文和英文两种语言切换。",
+      "code": "./intl.js",
+      "scope": [
+        {
+          "name": "remoteLoader",
+          "packageName": "@kne/remote-loader"
+        },
+        {
+          "name": "_PhoneNumberInput",
+          "packageName": "@kne/current-lib_phone-number-input",
+          "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
+        }
+      ]
     }
   ]
 }
