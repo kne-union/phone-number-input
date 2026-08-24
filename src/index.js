@@ -1,4 +1,4 @@
-import React, { useMemo, forwardRef, useRef } from 'react';
+import React, { useEffect, useMemo, forwardRef, useRef } from 'react';
 import Fetch from '@kne/react-fetch';
 import { Select, Input, Flex, Space } from 'antd';
 import parsePhoneNumberLib, { AsYouType } from 'libphonenumber-js';
@@ -12,6 +12,8 @@ import { useIntl, createIntl, FormattedMessage } from '@kne/react-intl';
 import withLocale from './withLocale';
 import transform from './transform';
 import style from './style.module.scss';
+
+const hasCallingCodePrefix = value => /^\+\d+/.test(String(value || '').trim());
 
 const { useDecorator } = hooks;
 
@@ -142,8 +144,45 @@ const PhoneNumberInputField = withLocale(
       if (format === 'string') {
         return [parsePhone(input(baseValue)), value => onChangeBase(output(value))];
       }
-      return [parsePhone(Object.assign({}, baseValue, { ab: countyCodeMap.get(baseValue?.code) })), onChangeBase];
+      const objectValue = typeof baseValue === 'string' ? input(baseValue) : Object.assign({}, baseValue);
+      if (get(objectValue, 'value') && (objectValue.code == null || objectValue.code === '')) {
+        objectValue.code = defaultCountryCode;
+      }
+      if (objectValue.code != null && objectValue.code !== '') {
+        objectValue.ab = countyCodeMap.get(objectValue.code);
+      }
+      return [parsePhone(objectValue), onChangeBase];
     }, [baseValue, format, countries, onChangeBase, defaultCountryCode]);
+
+    // 初始化只有国内号无区号时，UI 会显示默认区号，需同步写回表单值（如 +86）
+    useEffect(() => {
+      const { input, output, countyCodeMap } = transform(countries, defaultCountryCode);
+      if (format === 'string') {
+        if (typeof baseValue === 'string' && baseValue.trim() && !hasCallingCodePrefix(baseValue)) {
+          const next = output(input(baseValue));
+          if (next && next !== baseValue) {
+            onChangeBase(next);
+          }
+        }
+        return;
+      }
+
+      if (typeof baseValue === 'string' && baseValue.trim()) {
+        onChangeBase(parsePhone(input(baseValue)));
+        return;
+      }
+
+      if (baseValue && get(baseValue, 'value') && (baseValue.code == null || baseValue.code === '')) {
+        onChangeBase(
+          parsePhone(
+            Object.assign({}, baseValue, {
+              code: defaultCountryCode,
+              ab: countyCodeMap.get(defaultCountryCode)
+            })
+          )
+        );
+      }
+    }, [baseValue, format, countries, defaultCountryCode, onChangeBase]);
 
     return (
       <div ref={ref}>
@@ -179,7 +218,7 @@ const PhoneNumberInputField = withLocale(
                 onChange(
                   Object.assign({}, value, {
                     value: e.target.value,
-                    code: get(value, 'code') || currentCountryRef.current
+                    code: get(value, 'code') || currentCountryRef.current || defaultCountryCode
                   })
                 );
             }}
