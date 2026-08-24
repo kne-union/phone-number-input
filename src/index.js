@@ -8,8 +8,8 @@ import useControlValue from '@kne/use-control-value';
 import Icon from '@kne/react-icon';
 import { useGlobalValue } from '@kne/global-context';
 import get from 'lodash/get';
-import { createWithIntlProvider, useIntl, createIntl, FormattedMessage } from '@kne/react-intl';
-import zhCn from './locale/zh-CN';
+import { useIntl, createIntl, FormattedMessage } from '@kne/react-intl';
+import withLocale from './withLocale';
 import transform from './transform';
 import style from './style.module.scss';
 
@@ -64,11 +64,7 @@ export const withFetchCountries = WrappedComponent =>
     );
   });
 
-export const CountrySelect = createWithIntlProvider(
-  'zh-CN',
-  zhCn,
-  'phone-number-input'
-)(
+export const CountrySelect = withLocale(
   withFetchCountries(({ countries, showFlag, ...props }) => {
     const contextLocale = useGlobalValue('locale');
     const { formatMessage } = useIntl();
@@ -132,11 +128,7 @@ const parsePhone = value => {
   return Object.assign({}, value, { value: (askType.isValid() ? target : origin) || '' });
 };
 
-const PhoneNumberInputField = createWithIntlProvider(
-  'zh-CN',
-  zhCn,
-  'phone-number-input'
-)(
+const PhoneNumberInputField = withLocale(
   withFetchCountries(props => {
     //format: normal string
     const { onBlur, name, format, countries, defaultCountryCode = 86, showFlag, size, ...others } = props;
@@ -199,11 +191,7 @@ const PhoneNumberInputField = createWithIntlProvider(
   })
 );
 
-const PhoneNumberInput = createWithIntlProvider(
-  'zh-CN',
-  zhCn,
-  'phone-number-input'
-)(({ rule, ...props }) => {
+const PhoneNumberInput = withLocale(({ rule, ...props }) => {
   const { formatMessage } = useIntl();
   const render = useDecorator(
     Object.assign(
