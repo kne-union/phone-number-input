@@ -63,6 +63,29 @@
       ]
     },
     {
+      "title": "初始化无区号写回默认区号",
+      "description": "表单以 17010101010 等无区号号码初始化时，界面显示默认中国 (+86)，提交值应同步带上 +86。",
+      "code": "./init-default-code.js",
+      "scope": [
+        {
+          "name": "remoteLoader",
+          "packageName": "@kne/remote-loader"
+        },
+        {
+          "name": "_PhoneNumberInput",
+          "packageName": "@kne/current-lib_phone-number-input",
+          "importStatement": "import * as _PhoneNumberInput from \"@kne/phone-number-input\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        },
+        {
+          "packageName": "@kne/current-lib_phone-number-input/dist/index.css"
+        }
+      ]
+    },
+    {
       "title": "国际化",
       "description": "展示手机号输入框的国际化功能，支持中文和英文两种语言切换。",
       "code": "./intl.js",
